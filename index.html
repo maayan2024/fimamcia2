@@ -1,1 +1,136 @@
-Enter file contents here
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מחשבון חיסכון לילד - משה אליהו</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .calculator {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            max-width: 200px;
+            height: auto;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <img src="https://mosheeliyahu.co.il/wp-content/uploads/2023/11/%D7%9E%D7%A9%D7%94-%D7%90%D7%9C%D7%99%D7%94%D7%95-%D7%9C%D7%95%D7%92%D7%95-e1700475817150.png" alt="משה אליהו - לוגו" class="logo">
+        <h1>מחשבון חיסכון לילד</h1>
+        <form id="savingsForm">
+            <label for="monthlyDeposit">הפקדה חודשית (₪):</label>
+            <input type="number" id="monthlyDeposit" required>
+
+            <label for="oneTimeDeposit">הפקדה חד פעמית (₪):</label>
+            <input type="number" id="oneTimeDeposit" value="0">
+
+            <label for="currentAge">גיל הילד כעת:</label>
+            <input type="number" id="currentAge" required>
+
+            <label for="targetAge">גיל יעד למשיכת הכסף:</label>
+            <input type="number" id="targetAge" required>
+
+            <label for="riskLevel">רמת סיכון:</label>
+            <select id="riskLevel" required>
+                <option value="low">נמוכה - תשואה 3%</option>
+                <option value="medium">בינונית - תשואה 4%</option>
+                <option value="high">גבוהה - תשואה 8%</option>
+            </select>
+
+            <button type="submit">חשב</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('savingsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const monthlyDeposit = parseFloat(document.getElementById('monthlyDeposit').value);
+            const oneTimeDeposit = parseFloat(document.getElementById('oneTimeDeposit').value);
+            const currentAge = parseInt(document.getElementById('currentAge').value);
+            const targetAge = parseInt(document.getElementById('targetAge').value);
+            const riskLevel = document.getElementById('riskLevel').value;
+            
+            let interestRate;
+            switch(riskLevel) {
+                case 'low':
+                    interestRate = 0.03;
+                    break;
+                case 'medium':
+                    interestRate = 0.04;
+                    break;
+                case 'high':
+                    interestRate = 0.08;
+                    break;
+            }
+            
+            const years = targetAge - currentAge;
+            let totalSavings = oneTimeDeposit;
+            let totalDeposits = oneTimeDeposit;
+
+            for (let i = 0; i < years * 12; i++) {
+                totalSavings = (totalSavings + monthlyDeposit) * (1 + interestRate / 12);
+                totalDeposits += monthlyDeposit;
+            }
+
+            const interestEarned = totalSavings - totalDeposits;
+
+            document.getElementById('result').innerHTML = `
+                סכום צפוי בגיל ${targetAge}: ${totalSavings.toFixed(2)} ₪<br>
+                סך הפקדות: ${totalDeposits.toFixed(2)} ₪<br>
+                רווח מריבית: ${interestEarned.toFixed(2)} ₪
+            `;
+        });
+    </script>
+</body>
+</html>
